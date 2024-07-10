@@ -4,7 +4,7 @@ import { db } from "../firebase";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import React, { useContext } from "react";
-import { AuthContext, AuthProvider } from "./AuthProvider";
+import { AuthContext, AuthProvider } from "../AuthProvider";
 
 const LoginForm = () => {
   const { values, setValues } = useContext(AuthContext);
