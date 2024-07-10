@@ -28,12 +28,10 @@ const LoginForm = () => {
         router.push("/instruction");
       } else {
         console.log("No such user!");
-        setValues({ auth: false, username: "" });
         seterrorMessage("登録されていません");
       }
     } else {
       console.error("Error checking user existence");
-      setValues({ auth: false, username: "" });
       seterrorMessage("エラーが発生しました。もう一度お試しください。");
     }
   };
