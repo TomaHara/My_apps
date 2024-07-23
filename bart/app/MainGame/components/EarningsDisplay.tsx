@@ -4,11 +4,19 @@ import { ResultsContext } from "../../ResultsData/ResultDataProvider";
 
 export const EarningsDisplay = () => {
   const earnings = useContext(ResultsContext).results.earnings;
-  const trialCount: number = earnings.length;
+  const trialCount: number = earnings?.length;
+  let totalEarnings: number;
+  let previousbaloon: number | string;
+  if (trialCount === 0) {
+    totalEarnings = 0;
+    previousbaloon = "なし";
+  } else {
+    totalEarnings = earnings.reduce((a, b) => a + b, 0);
+    previousbaloon = earnings[trialCount - 1];
+  }
 
-  //合計の獲得金額(配列enringsの合計)
-  const totalEarnings: number = earnings.reduce((a, b) => a + b, 0);
-  const previousbaloon: number = earnings[trialCount - 1];
+  // const totalEarnings: number = earnings.reduce((a, b) => a + b, 0);
+  // const previousbaloon: number = earnings[trialCount - 1];
   return (
     <div className="text-center">
       <div className="mb-2">

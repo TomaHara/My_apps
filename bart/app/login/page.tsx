@@ -2,7 +2,7 @@
 "use client";
 
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db } from "../firebase";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import React, { useContext } from "react";
@@ -33,7 +33,7 @@ const LoginForm = () => {
         setCookie("username", username);
         setErrorMessage("");
         console.log(authInfo);
-        router.push("/BART/instruction");
+        router.push("/instruction");
       } else {
         console.log("No such user!");
         setErrorMessage("登録されていません");
@@ -51,7 +51,7 @@ const LoginForm = () => {
 
   const handleClick = () => {
     setCookie("isAuth", false);
-    router.push("/BART/instruction");
+    router.push("/instruction");
   };
 
   return (

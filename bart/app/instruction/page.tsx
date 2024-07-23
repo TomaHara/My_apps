@@ -17,7 +17,7 @@ export default function InstructionPage() {
         <div className="p-8">
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-            onClick={() => router.push("/BART/MainGame")}
+            onClick={() => router.push("/MainGame")}
           >
             ゲーム開始
           </button>

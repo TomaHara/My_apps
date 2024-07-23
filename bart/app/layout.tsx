@@ -1,12 +1,10 @@
-import type { Metadata } from "next";
+"use client";
+import React from "react";
+import { CookiesProvider } from "react-cookie";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Baloon Analogue Risk Task",
-};
 
 export default function RootLayout({
   children,
@@ -15,7 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <CookiesProvider>{children}</CookiesProvider>
+      </body>
     </html>
   );
 }

@@ -2,7 +2,8 @@
 import React, { useContext } from "react";
 import { GameContext } from "../../GameData/GameContextProvider";
 import Image from "next/image";
-import BalloonImg from "./Image/Balloon.png";
+// import BalloonImg from "./Image/Balloon.png";
+// import BalloonImg from "./Image/Balloon.svg";
 
 export const Balloon = () => {
   const pompCount = useContext(GameContext).values.pompCount;
@@ -12,7 +13,7 @@ export const Balloon = () => {
   return (
     <div className="flex justify-center items-center">
       <Image
-        src={BalloonImg}
+        src="/Balloon.png"
         width={balloonSize}
         height={balloonSize}
         layout="fixed"

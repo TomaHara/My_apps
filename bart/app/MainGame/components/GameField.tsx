@@ -8,7 +8,7 @@ import { SettingData } from "../../GameData/SettingDataProvider";
 import { ResultsContext } from "../../ResultsData/ResultDataProvider";
 import Modal from "react-modal";
 import { useCookies } from "react-cookie";
-import { db } from "../../../firebase";
+import { db } from "../../firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
@@ -19,17 +19,18 @@ export const GameField = () => {
   const Trials = settings.TrialBlocks * 10;
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [authInfo] = useCookies(["isAuth", "username"]);
-  const docRef = collection(db, "Users", authInfo?.username, "PlayData");
   const router = useRouter();
+  // const docRef = collection(db, "Users", authInfo?.username, "PlayData");
 
   useEffect(() => {
     if (trialCount === Trials) {
       setIsOpenModal(true);
       if (authInfo.isAuth) {
+        const docRef = collection(db, "Users", authInfo.username, "PlayData");
         addDoc(docRef, { results, settings, timestamp: serverTimestamp() });
       }
     }
-  }, [trialCount, Trials, authInfo.isAuth, docRef, results, settings]);
+  }, [trialCount, Trials, authInfo, results, settings]);
 
   return (
     <div className="flex flex-col items-center justify-between min-h-screen bg-gray-100">
@@ -50,7 +51,7 @@ export const GameField = () => {
         <div className="h-full w-full flex justify-center items-center">
           <button
             className="px-4 py-2 flex justify-center items-center bg-blue-500 text-white rounded hover:bg-blue-700"
-            onClick={() => router.push("/BART/login")}
+            onClick={() => router.push("/login")}
           >
             ゲーム終了
           </button>

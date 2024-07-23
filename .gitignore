@@ -1,2 +1,4 @@
 # firebase
 firebase*.yml
+.firebase
+firebase.json

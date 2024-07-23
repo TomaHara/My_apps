@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { SettingData } from "../../GameData/SettingDataProvider";
 import { GameContext } from "../../GameData/GameContextProvider";
 import { ResultsContext } from "../../ResultsData/ResultDataProvider";
-import BurstImg from "./Image/Burst.png";
+// import BurstImg from "./Image/Burst.png";
 import Image from "next/image";
 
 export const PompButton = () => {
@@ -147,7 +147,7 @@ export const PompButton = () => {
       <dialog className="w-screen h-screen">
         <div className=" h-full flex justify-center items-center">
           <div className="flex-col">
-            <Image src={BurstImg} alt="burst" width={500} height={500} />
+            <Image src="/Burst.png" alt="burst" width={500} height={500} />
             <div className="flex justify-center mt-4">
               <button
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
