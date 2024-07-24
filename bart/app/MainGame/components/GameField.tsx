@@ -9,7 +9,13 @@ import { ResultsContext } from "../../ResultsData/ResultDataProvider";
 import Modal from "react-modal";
 import { useCookies } from "react-cookie";
 import { db } from "../../firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  FieldValue,
+  Timestamp,
+} from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
 export const GameField = () => {
@@ -18,19 +24,28 @@ export const GameField = () => {
   const settings = useContext(SettingData);
   const Trials = settings.TrialBlocks * 10;
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [gameStartTimestamp, setGameStartTimestamp] = useState<FieldValue>();
   const [authInfo] = useCookies(["isAuth", "username"]);
   const router = useRouter();
-  // const docRef = collection(db, "Users", authInfo?.username, "PlayData");
+
+  useEffect(() => {
+    setGameStartTimestamp(Timestamp.fromDate(new Date()));
+  }, []);
 
   useEffect(() => {
     if (trialCount === Trials) {
       setIsOpenModal(true);
       if (authInfo.isAuth) {
         const docRef = collection(db, "Users", authInfo.username, "PlayData");
-        addDoc(docRef, { results, settings, timestamp: serverTimestamp() });
+        addDoc(docRef, {
+          results,
+          settings,
+          gameCompleteTimestamp: serverTimestamp(),
+          gameStartTimestamp: gameStartTimestamp,
+        });
       }
     }
-  }, [trialCount, Trials, authInfo, results, settings]);
+  }, [trialCount, Trials, authInfo, results, settings, gameStartTimestamp]);
 
   return (
     <div className="flex flex-col items-center justify-between min-h-screen bg-gray-100">
@@ -45,7 +60,6 @@ export const GameField = () => {
         <div className="flex justify-center mb-4 ">
           <EarningsDisplay />
         </div>
-        <div>{trialCount === Trials ? <button>ゲーム終了</button> : null}</div>
       </div>
       <Modal className="h-full w-full" isOpen={isOpenModal}>
         <div className="h-full w-full flex justify-center items-center">

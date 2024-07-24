@@ -3,8 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { SettingData } from "../../GameData/SettingDataProvider";
 import { GameContext } from "../../GameData/GameContextProvider";
 import { ResultsContext } from "../../ResultsData/ResultDataProvider";
-// import BurstImg from "./Image/Burst.png";
-import Image from "next/image";
+import { serverTimestamp, Timestamp } from "firebase/firestore";
 
 export const PompButton = () => {
   const { gainPerPush, maxBurstPoint, minBurstPoint, TrialBlocks } =
@@ -122,7 +121,12 @@ export const PompButton = () => {
     console.log(values);
     if (values.pompCount + 1 == burstPoints[values.trialCount - 1]) {
       openDialog();
-      addResultsData(0, true, values.pompCount + 1);
+      addResultsData(
+        0,
+        true,
+        values.pompCount + 1,
+        Timestamp.fromMillis(Date.now())
+      );
       setValues((prevValues) => ({
         ...prevValues,
         trialCount: prevValues.trialCount + 1,
@@ -147,7 +151,7 @@ export const PompButton = () => {
       <dialog className="w-screen h-screen">
         <div className=" h-full flex justify-center items-center">
           <div className="flex-col">
-            <Image src="/Burst.png" alt="burst" width={500} height={500} />
+            <img src="/Burst.png" alt="Pomp Button" width="600" height="600" />
             <div className="flex justify-center mt-4">
               <button
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"

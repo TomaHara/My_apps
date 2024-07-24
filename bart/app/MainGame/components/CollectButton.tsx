@@ -3,6 +3,7 @@ import { use, useContext } from "react";
 import { GameContext } from "../../GameData/GameContextProvider";
 import { ResultsContext } from "../../ResultsData/ResultDataProvider";
 import { SettingData } from "../../GameData/SettingDataProvider";
+import { serverTimestamp, Timestamp } from "firebase/firestore";
 
 export const CollectButton = () => {
   const { values, setValues } = useContext(GameContext);
@@ -10,7 +11,12 @@ export const CollectButton = () => {
   const gainPerPush = useContext(SettingData).gainPerPush;
 
   const handleCollect = () => {
-    addResultsData(values.temporarySavings, false, values.pompCount);
+    addResultsData(
+      values.temporarySavings,
+      false,
+      values.pompCount,
+      Timestamp.fromMillis(Date.now())
+    );
     setValues((prevValues) => ({
       ...prevValues,
       trialCount: prevValues.trialCount + 1,
