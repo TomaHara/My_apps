@@ -1,12 +1,14 @@
-"use client";
-import { FieldValue, serverTimestamp } from "firebase/firestore";
-import React, { createContext, useContext, useState } from "react";
-import { Timestamp } from "firebase/firestore";
+'use client';
+import { FieldValue, serverTimestamp } from 'firebase/firestore';
+import React, { createContext, useContext, useState } from 'react';
+import { Timestamp } from 'firebase/firestore';
 
 export interface ResultsData {
   earnings: number[]; // 獲得金額
   isBurst: boolean[]; // 破裂したかどうか
   pompCount: number[]; // 膨らませた回数
+  isChallenged: boolean[]; // ダブルチャンスに挑戦したかどうか
+  totalEarnings: number; // 総獲得金額
   balloonEndTimestamp: Timestamp[]; //各風船終了時のタイムスタンプ
 }
 // 各風船のデータを表すインターフェースを定義
@@ -16,8 +18,11 @@ export interface ResultsDataContext {
     earnings: number,
     isBurst: boolean,
     pompCount: number,
+    totalEarnings: number,
     balloonEndTimestamp: Timestamp
   ) => void;
+  addTotalEarnings: (totalEarnings: number) => void;
+  addIsChallenged: (isChallenged: boolean) => void;
 }
 type Props = {
   children: React.ReactNode;
@@ -31,18 +36,23 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
     isBurst: [],
     pompCount: [],
     balloonEndTimestamp: [],
+    isChallenged: [],
+    totalEarnings: 0,
   });
 
   const addResultsData = (
     earnings: number,
     isBurst: boolean,
     pompCount: number,
+    totalEarnings: number,
     balloonEndTimestamp: Timestamp
   ) => {
     setResults((prevResults) => ({
+      ...prevResults,
       earnings: [...prevResults.earnings, earnings],
       isBurst: [...prevResults.isBurst, isBurst],
       pompCount: [...prevResults.pompCount, pompCount],
+      totalEarnings: totalEarnings,
       balloonEndTimestamp: [
         ...prevResults.balloonEndTimestamp,
         balloonEndTimestamp,
@@ -50,8 +60,24 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
     }));
   };
 
+  const addTotalEarnings = (totalEarnings: number) => {
+    setResults((prevResults) => ({
+      ...prevResults,
+      totalEarnings: totalEarnings,
+    }));
+  };
+
+  const addIsChallenged = (isChallenged: boolean) => {
+    setResults((prevResults) => ({
+      ...prevResults,
+      isChallenged: [...prevResults.isChallenged, isChallenged],
+    }));
+  };
+
   return (
-    <ResultsContext.Provider value={{ results, addResultsData }}>
+    <ResultsContext.Provider
+      value={{ results, addResultsData, addTotalEarnings, addIsChallenged }}
+    >
       {children}
     </ResultsContext.Provider>
   );

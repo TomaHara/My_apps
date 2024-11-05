@@ -1,5 +1,5 @@
-"use client";
-import React, { createContext, useContext, useState } from "react";
+'use client';
+import React, { createContext, useContext, useState } from 'react';
 
 type Props = {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ interface Setting {
 }
 
 const settingInfo: Setting = {
-  TrialBlocks: 1,
+  TrialBlocks: 2,
   gainPerPush: 5,
   maxBurstPoint: 128,
   minBurstPoint: 1,

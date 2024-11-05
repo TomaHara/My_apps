@@ -1,22 +1,22 @@
-"use client";
-import { PompButton } from "./PompButton";
-import { CollectButton } from "./CollectButton";
-import { EarningsDisplay } from "./EarningsDisplay";
-import { Balloon } from "./Balloon";
-import { useContext, useState, useEffect } from "react";
-import { SettingData } from "../../GameData/SettingDataProvider";
-import { ResultsContext } from "../../ResultsData/ResultDataProvider";
-import Modal from "react-modal";
-import { useCookies } from "react-cookie";
-import { db } from "../../firebase";
+'use client';
+import { PompButton } from './PompButton';
+import { CollectButton } from './CollectButton';
+import { EarningsDisplay } from './EarningsDisplay';
+import { Balloon } from './Balloon';
+import { useContext, useState, useEffect } from 'react';
+import { SettingData } from '../../GameData/SettingDataProvider';
+import { ResultsContext } from '../../ResultsData/ResultDataProvider';
+import Modal from 'react-modal';
+import { useCookies } from 'react-cookie';
+import { db } from '../../firebase';
 import {
   collection,
   addDoc,
   serverTimestamp,
   FieldValue,
   Timestamp,
-} from "firebase/firestore";
-import { useRouter } from "next/navigation";
+} from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
 
 export const GameField = () => {
   const results = useContext(ResultsContext).results;
@@ -25,18 +25,20 @@ export const GameField = () => {
   const Trials = settings.TrialBlocks * 10;
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [gameStartTimestamp, setGameStartTimestamp] = useState<FieldValue>();
-  const [authInfo] = useCookies(["isAuth", "username"]);
+  const [authInfo] = useCookies(['isAuth', 'username']);
   const router = useRouter();
-
   useEffect(() => {
     setGameStartTimestamp(Timestamp.fromDate(new Date()));
   }, []);
 
   useEffect(() => {
     if (trialCount === Trials) {
-      setIsOpenModal(true);
+      setTimeout(() => {
+        setIsOpenModal(true);
+      }, 500);
+
       if (authInfo.isAuth) {
-        const docRef = collection(db, "Users", authInfo.username, "PlayData");
+        const docRef = collection(db, 'Users', authInfo.username, 'PlayData');
         addDoc(docRef, {
           results,
           settings,
@@ -48,8 +50,14 @@ export const GameField = () => {
   }, [trialCount, Trials, authInfo, results, settings, gameStartTimestamp]);
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen bg-gray-100">
-      <div className="flex-grow flex items-center justify-center">
+    <div className="flex flex-col items-center justify-start h-screen bg-gray-100">
+      <div className="mt-10">
+        <p className="text-2xl font-semibold text-black">
+          {`${trialCount + 1}/${settings.TrialBlocks * 10}`}
+        </p>
+      </div>
+
+      <div className="flex-grow flex items-center justify-center max-h-[600px]">
         <Balloon />
       </div>
       <div className="w-full mb-10 mt-5">
@@ -65,7 +73,7 @@ export const GameField = () => {
         <div className="h-full w-full flex justify-center items-center">
           <button
             className="px-4 py-2 flex justify-center items-center bg-blue-500 text-white rounded hover:bg-blue-700"
-            onClick={() => router.push("/login")}
+            onClick={() => router.push('/login')}
           >
             ゲーム終了
           </button>

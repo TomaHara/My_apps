@@ -1,9 +1,9 @@
-"use client";
-import { use, useContext } from "react";
-import { GameContext } from "../../GameData/GameContextProvider";
-import { ResultsContext } from "../../ResultsData/ResultDataProvider";
-import { SettingData } from "../../GameData/SettingDataProvider";
-import { serverTimestamp, Timestamp } from "firebase/firestore";
+'use client';
+import { use, useContext } from 'react';
+import { GameContext } from '../../GameData/GameContextProvider';
+import { ResultsContext } from '../../ResultsData/ResultDataProvider';
+import { SettingData } from '../../GameData/SettingDataProvider';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 
 export const CollectButton = () => {
   const { values, setValues } = useContext(GameContext);
@@ -15,6 +15,7 @@ export const CollectButton = () => {
       values.temporarySavings,
       false,
       values.pompCount,
+      results.totalEarnings + values.temporarySavings,
       Timestamp.fromMillis(Date.now())
     );
     setValues((prevValues) => ({

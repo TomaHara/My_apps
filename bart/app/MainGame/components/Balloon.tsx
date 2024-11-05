@@ -1,6 +1,6 @@
-"use client";
-import React, { useContext } from "react";
-import { GameContext } from "../../GameData/GameContextProvider";
+'use client';
+import React, { useContext } from 'react';
+import { GameContext } from '../../GameData/GameContextProvider';
 
 export const Balloon = () => {
   const pompCount = useContext(GameContext).values.pompCount;
@@ -13,7 +13,7 @@ export const Balloon = () => {
         src="/Balloon.png"
         width={balloonSize}
         height={balloonSize}
-        style={{ objectFit: "contain" }}
+        style={{ objectFit: 'contain' }}
         alt="Balloon"
       />
     </div>
