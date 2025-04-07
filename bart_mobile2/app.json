@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "bart_mobile2",
-    "slug": "bart_mobile2",
+    "name": "bart-mobile",
+    "slug": "bart-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
@@ -55,11 +55,12 @@
         "origin": false
       },
       "eas": {
-        "projectId": "e8cf8f6b-fae2-4fac-87d0-806366b8fdf4"
+        "projectId": "c5850b7a-c481-4c53-b076-168c4eeb8465"
       }
     },
     "updates": {
-      "url": "https://u.expo.dev/e8cf8f6b-fae2-4fac-87d0-806366b8fdf4"
-    }
+      "url": "https://u.expo.dev/c5850b7a-c481-4c53-b076-168c4eeb8465"
+    },
+    "runtimeVersion": "1.0.0"
   }
 }
