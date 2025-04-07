@@ -15,8 +15,7 @@ export interface ResultsDataContext {
     earnings: number,
     isBurst: boolean,
     pompCount: number,
-    totalEarnings: number,
-    balloonEndTimestamp: Timestamp
+    totalEarnings: number
   ) => void;
   resetResults: () => void;
 }
@@ -42,8 +41,7 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
     earnings: number,
     isBurst: boolean,
     pompCount: number,
-    totalEarnings: number,
-    balloonEndTimestamp: Timestamp
+    totalEarnings: number
   ) => {
     setResults((prevResults) => ({
       ...prevResults,
@@ -51,10 +49,6 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
       isBurst: [...prevResults.isBurst, isBurst],
       pompCount: [...prevResults.pompCount, pompCount],
       totalEarnings: totalEarnings,
-      balloonEndTimestamp: [
-        ...prevResults.balloonEndTimestamp,
-        balloonEndTimestamp,
-      ],
     }));
   };
 

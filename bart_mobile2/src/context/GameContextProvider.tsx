@@ -17,6 +17,7 @@ type InitialState = {
       temporarySavings: number;
     }>
   >;
+  resetValues: () => void;
 };
 
 export const GameContext = createContext({} as InitialState);
@@ -32,9 +33,12 @@ export const GameContextProvider: React.FC<Props> = ({ children }) => {
     temporarySavings: 0,
   };
   const [values, setValues] = useState(initialValues);
+  const resetValues = () => {
+    setValues(initialValues);
+  };
 
   return (
-    <GameContext.Provider value={{ values, setValues }}>
+    <GameContext.Provider value={{ values, setValues, resetValues }}>
       {children}
     </GameContext.Provider>
   );

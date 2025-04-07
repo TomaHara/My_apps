@@ -21,8 +21,7 @@ export const CollectButton = () => {
       values.temporarySavings,
       false,
       values.pompCount,
-      results.totalEarnings + values.temporarySavings,
-      Timestamp.fromMillis(Date.now())
+      results.totalEarnings + values.temporarySavings
     );
 
     setValues((prevValues) => ({

@@ -21,7 +21,8 @@ import { EarningsDisplay } from './components/EarningsDisplay';
 
 export default function MainGameScreen() {
   const settings = useContext(SettingData);
-  const { results } = useContext(ResultsContext);
+  const { results, resetResults } = useContext(ResultsContext);
+  const { resetValues } = useContext(GameContext);
   const { user, signOut } = useAuth();
   const trialCount = results.earnings.length;
   const totalTrials = settings.TrialBlocks * 10;
@@ -40,28 +41,32 @@ export default function MainGameScreen() {
           settings,
           gameCompleteTimestamp: serverTimestamp(),
         });
+        resetResults();
+        resetValues();
+        Alert.alert('ゲーム終了', 'お疲れ様でした。データが保存されました。');
       } catch (error) {
         console.error('Error saving data:', error);
         Alert.alert('エラー', 'データの保存に失敗しました。');
+      } finally {
+        router.replace('/login');
       }
     }
-    await signOut();
-    router.replace('/login');
   }, [user, results, settings, signOut]);
 
   useEffect(() => {
     if (trialCount === totalTrials) {
-      Alert.alert(
-        'ゲーム終了',
-        'お疲れ様でした。ゲームが終了しました。',
-        [
-          {
-            text: 'OK',
-            onPress: handleGameEnd,
-          },
-        ],
-        { cancelable: false }
-      );
+      // Alert.alert(
+      //   'ゲーム終了',
+      //   'お疲れ様でした。ゲームが終了しました。',
+      //   [
+      //     {
+      //       text: 'OK',
+      //       onPress: handleGameEnd,
+      //     },
+      //   ],
+      //   { cancelable: false }
+      // );
+      handleGameEnd();
     }
   }, [trialCount, totalTrials, handleGameEnd]);
 

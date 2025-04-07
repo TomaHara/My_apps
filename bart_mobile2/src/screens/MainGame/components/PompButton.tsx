@@ -95,8 +95,7 @@ export const PompButton = () => {
         0,
         true,
         values.pompCount + increment,
-        results.totalEarnings,
-        Timestamp.fromMillis(Date.now())
+        results.totalEarnings
       );
       setValues((prevValues) => ({
         ...prevValues,
