@@ -32,7 +32,7 @@ export default function MainGameScreen() {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        Alert.alert('ゲームを完了するまで戻れません。', '', [
+        Alert.alert('タスクを完了するまで戻れません。', '', [
           {
             text: 'OK',
             onPress: () => null,
@@ -47,30 +47,32 @@ export default function MainGameScreen() {
     return () => backHandler.remove();
   }, []);
 
-  const handleGameEnd = useCallback(async () => {
-    if (user) {
-      try {
-        await addDoc(collection(db, 'Shozemi', user.uid, 'PlayData'), {
-          results,
-          settings,
-          gameCompleteTimestamp: serverTimestamp(),
-        });
-        resetResults();
-        resetValues();
-      } catch (error) {
-        console.error('Error saving data:', error);
-        Alert.alert('エラー', 'データの保存に失敗しました。');
-      } finally {
-        router.replace('/login');
-      }
-    }
-  }, [user, results, settings, signOut]);
+  // const handleGameEnd = useCallback(async () => {
+  //   if (user) {
+  //     try {
+  //       await addDoc(collection(db, 'Shozemi', user.uid, 'PlayData'), {
+  //         results,
+  //         settings,
+  //         gameCompleteTimestamp: serverTimestamp(),
+  //       });
+  //       resetResults();
+  //       resetValues();
+  //     } catch (error) {
+  //       console.error('Error saving data:', error);
+  //       Alert.alert('エラー', 'データの保存に失敗しました。');
+  //     } finally {
+  //       router.replace('/login');
+  //     }
+  //   }
+  // }, [user, results, settings, signOut]);
 
   useEffect(() => {
     if (trialCount === totalTrials) {
-      handleGameEnd();
+      // handleGameEnd();
+      router.replace('/taskQuestionnaire');
     }
-  }, [trialCount, totalTrials, handleGameEnd]);
+    // }, [trialCount, totalTrials, handleGameEnd]);
+  }, [trialCount, totalTrials]);
 
   if (!settings || !results) {
     return null;

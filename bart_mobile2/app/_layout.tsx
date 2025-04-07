@@ -78,6 +78,12 @@ export default function RootLayout() {
               contentStyle: { backgroundColor: '#fff' },
             }}
           />
+          <Stack.Screen
+            name="taskQuestionnaire/index"
+            options={{
+              contentStyle: { backgroundColor: '#fff' },
+            }}
+          />
         </Stack>
       </MemoizedProviders>
     </GestureHandlerRootView>
