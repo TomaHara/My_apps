@@ -185,18 +185,16 @@ export default function LoginScreen() {
       const result = await signIn(email, password);
       if (result.isSuccess) {
         router.replace('/mainGame');
-      } else {
-        if (result.errorCode === 'auth/user-not-found') {
-          Alert.alert(
-            'エラー',
-            'メールアドレスまたはパスワードが正しくありません'
-          );
-        } else if (result.errorCode === 'auth/wrong-password') {
-          Alert.alert(
-            'エラー',
-            'メールアドレスまたはパスワードが正しくありません'
-          );
-        }
+      } else if (result.errorCode === 'auth/invalid-email') {
+        Alert.alert(
+          'エラー',
+          'メールアドレスまたはパスワードが正しくありません'
+        );
+      } else if (result.errorCode === 'auth/invalid-credential') {
+        Alert.alert(
+          'エラー',
+          'メールアドレスまたはパスワードが正しくありません'
+        );
       }
     } catch (error) {
       console.error('Login failed:', error);
@@ -212,6 +210,7 @@ export default function LoginScreen() {
           <View style={styles.header}>
             <Text style={styles.title}>ログイン</Text>
           </View>
+          {error && <Text style={styles.errorText}>{error}</Text>}
 
           <View style={styles.form}>
             <TextInput

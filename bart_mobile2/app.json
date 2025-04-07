@@ -6,11 +6,17 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "scheme": "bart-mobile2",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "newArchEnabled": true,
       "supportsTablet": true,
-      "bundleIdentifier": "com.barttask.bart-mobile2",
+      "bundleIdentifier": "com.anonym.bartmobile2",
       "runtimeVersion": "1.0.0",
       "googleServicesFile": "./GoogleService-Info.plist"
     },
@@ -18,9 +24,10 @@
       "googleServicesFile": "./google-services.json",
       "newArchEnabled": true,
       "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.barttask.bart_mobile2",
+      "package": "com.anonym.bartmobile2",
       "runtimeVersion": {
         "policy": "appVersion"
       }

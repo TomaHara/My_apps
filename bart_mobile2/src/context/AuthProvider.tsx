@@ -7,8 +7,10 @@ import {
   onAuthStateChanged,
   User,
 } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 import auth from '../firebase/firebase';
+import { db } from '../firebase/firebase';
 
 type Result = {
   isSuccess: boolean;
@@ -70,7 +72,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       setIsLoading(true);
       setError(null);
-      await createUserWithEmailAndPassword(auth, email, password);
+      // ユーザーを作成
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Shozemiコレクションにユーザードキュメントを作成
+      await setDoc(doc(db, 'Shozemi', userCredential.user.uid), {
+        email: email,
+        createdAt: new Date().toISOString(),
+      });
+
       return { isSuccess: true };
     } catch (error: any) {
       setError(error.message);

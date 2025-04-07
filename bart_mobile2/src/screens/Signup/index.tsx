@@ -31,7 +31,12 @@ export default function SignupScreen() {
     try {
       const result = await signUp(email, password);
       if (result.isSuccess) {
-        router.replace('/login');
+        Alert.alert('成功', 'アカウントが作成されました', [
+          {
+            text: 'OK',
+            onPress: () => router.replace('/login'),
+          },
+        ]);
       } else {
         if (result.errorCode === 'auth/email-already-in-use') {
           Alert.alert('エラー', 'このメールアドレスは既に使用されています');
@@ -77,6 +82,7 @@ export default function SignupScreen() {
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
+          autoComplete="off"
         />
 
         <TouchableOpacity
