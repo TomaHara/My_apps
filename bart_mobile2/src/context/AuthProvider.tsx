@@ -46,7 +46,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
     });
-
     return unsubscribe;
   }, [auth]);
 
@@ -55,6 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsLoading(true);
       setError(null);
       await signInWithEmailAndPassword(auth, email, password);
+      setUser(auth.currentUser);
       return { isSuccess: true };
     } catch (error: any) {
       setError(error.message);

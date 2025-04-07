@@ -69,7 +69,6 @@ export default function TaskQuestionnairePage() {
       try {
         await addDoc(collection(db, 'Shozemi', user.uid, 'TaskData'), {
           results,
-          // settings,
           questionnaire,
           taskCompleteTimestamp: serverTimestamp(),
         });
@@ -143,7 +142,7 @@ export default function TaskQuestionnairePage() {
             handleSubmit();
           }}
         >
-          <Text style={styles.submitButtonText}>次へ</Text>
+          <Text style={styles.submitButtonText}>終了</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
