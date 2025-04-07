@@ -130,10 +130,10 @@ export const PompButton = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.buttonRed]}
-          onPress={() => handlePomp(10)}
+          onPress={() => handlePomp(5)}
           disabled={buttonDisabled}
         >
-          <Text style={styles.buttonText}>+10</Text>
+          <Text style={styles.buttonText}>+5</Text>
         </TouchableOpacity>
       </View>
 

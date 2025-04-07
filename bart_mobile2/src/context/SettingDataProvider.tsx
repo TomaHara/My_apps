@@ -13,7 +13,7 @@ interface Setting {
 }
 
 const defaultSettings: Setting = {
-  TrialBlocks: 1,
+  TrialBlocks: 3,
   gainPerPush: 5,
   maxBurstPoint: 128,
   minBurstPoint: 1,

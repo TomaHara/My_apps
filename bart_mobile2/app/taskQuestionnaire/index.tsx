@@ -60,36 +60,35 @@ export default function TaskQuestionnairePage() {
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (selectedStress) {
-      setTaskStress(selectedStress);
-      if (user) {
-        try {
-          await addDoc(collection(db, 'Shozemi', user.uid, 'TaskData'), {
-            results,
-            // settings,
-            questionnaire,
-            taskCompleteTimestamp: serverTimestamp(),
-          });
-          //   await addDoc(
-          //     collection(db, 'Shozemi', user.uid, 'QuestionnaireData'),
-          //     {
-          //       questionnaire,
-          //     }
-          //   );
-          resetResults();
-          resetValues();
-        } catch (error) {
-          console.error('Error saving data:', error);
-          Alert.alert('エラー', 'データの保存に失敗しました。');
-        } finally {
-          router.replace('/login');
-        }
-      }
-    } else {
+    if (!selectedStress) {
       Alert.alert('エラー', 'タスクの負荷を選択してください');
       return;
     }
-  }, [user, results, settings, signOut]);
+    setTaskStress(selectedStress);
+    if (user) {
+      try {
+        await addDoc(collection(db, 'Shozemi', user.uid, 'TaskData'), {
+          results,
+          // settings,
+          questionnaire,
+          taskCompleteTimestamp: serverTimestamp(),
+        });
+        //   await addDoc(
+        //     collection(db, 'Shozemi', user.uid, 'QuestionnaireData'),
+        //     {
+        //       questionnaire,
+        //     }
+        //   );
+        resetResults();
+        resetValues();
+      } catch (error) {
+        console.error('Error saving data:', error);
+        Alert.alert('エラー', 'データの保存に失敗しました。');
+      } finally {
+        router.push('/login');
+      }
+    }
+  }, [user, results, settings, signOut, selectedStress]);
 
   //   const handleSubmit = () => {
   //     if (selectedStress) {
@@ -121,7 +120,10 @@ export default function TaskQuestionnairePage() {
                 styles.optionContainer,
                 selectedStress === option && styles.selectedOptionContainer,
               ]}
-              onPress={() => setSelectedStress(option)}
+              onPress={() => {
+                console.log('Option selected:', option);
+                setSelectedStress(option);
+              }}
             >
               <RadioButton isSelected={selectedStress === option} />
               <Text
