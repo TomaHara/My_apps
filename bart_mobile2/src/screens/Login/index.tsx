@@ -184,7 +184,7 @@ export default function LoginScreen() {
     try {
       const result = await signIn(email, password);
       if (result.isSuccess) {
-        router.replace('/mainGame');
+        router.replace('/sleepQuestionnaire');
       } else if (result.errorCode === 'auth/invalid-email') {
         Alert.alert(
           'エラー',

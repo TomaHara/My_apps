@@ -61,6 +61,12 @@ export default function RootLayout() {
             }}
           />
           <Stack.Screen
+            name="sleepQuestionnaire/index"
+            options={{
+              contentStyle: { backgroundColor: '#fff' },
+            }}
+          />
+          <Stack.Screen
             name="instruction/index"
             options={{
               contentStyle: { backgroundColor: '#fff' },

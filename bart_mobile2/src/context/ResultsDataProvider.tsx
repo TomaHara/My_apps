@@ -9,8 +9,14 @@ export interface ResultsData {
   balloonEndTimestamp: Timestamp[];
 }
 
+export interface Questionnaire {
+  sleepQuality: string;
+  taskStress: string;
+}
+
 export interface ResultsDataContext {
   results: ResultsData;
+  questionnaire: Questionnaire;
   addResultsData: (
     earnings: number,
     isBurst: boolean,
@@ -18,6 +24,8 @@ export interface ResultsDataContext {
     totalEarnings: number
   ) => void;
   resetResults: () => void;
+  setSleepQuality: (sleepQuality: string) => void;
+  setTaskStress: (taskStress: string) => void;
 }
 
 type Props = {
@@ -36,6 +44,10 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
   };
 
   const [results, setResults] = useState<ResultsData>(initialResults);
+  const [questionnaire, setQuestionnaire] = useState<Questionnaire>({
+    sleepQuality: '',
+    taskStress: '',
+  });
 
   const addResultsData = (
     earnings: number,
@@ -56,8 +68,30 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
     setResults(initialResults);
   };
 
+  const setSleepQuality = (sleepQuality: string) => {
+    setQuestionnaire((prevQuestionnaire) => ({
+      ...prevQuestionnaire,
+      sleepQuality: sleepQuality,
+    }));
+  };
+  const setTaskStress = (taskStress: string) => {
+    setQuestionnaire((prevQuestionnaire) => ({
+      ...prevQuestionnaire,
+      taskStress: taskStress,
+    }));
+  };
+
   return (
-    <ResultsContext.Provider value={{ results, addResultsData, resetResults }}>
+    <ResultsContext.Provider
+      value={{
+        results,
+        addResultsData,
+        resetResults,
+        questionnaire,
+        setSleepQuality,
+        setTaskStress,
+      }}
+    >
       {children}
     </ResultsContext.Provider>
   );
