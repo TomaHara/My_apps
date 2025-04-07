@@ -6,6 +6,7 @@ import {
   Alert,
   SafeAreaView,
   Platform,
+  BackHandler,
 } from 'react-native';
 import { router } from 'expo-router';
 import { GameContext } from '../../context/GameContextProvider';
@@ -28,10 +29,23 @@ export default function MainGameScreen() {
   const totalTrials = settings.TrialBlocks * 10;
 
   useEffect(() => {
-    if (!settings || !results) {
-      router.replace('/login');
-    }
-  }, [settings, results]);
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        Alert.alert('ゲームを完了するまで戻れません。', '', [
+          {
+            text: 'OK',
+            onPress: () => null,
+            style: 'cancel',
+          },
+        ]);
+        return true;
+      }
+    );
+
+    // コンポーネントがアンマウントされるときリスナーを解除
+    return () => backHandler.remove();
+  }, []);
 
   const handleGameEnd = useCallback(async () => {
     if (user) {
@@ -43,7 +57,6 @@ export default function MainGameScreen() {
         });
         resetResults();
         resetValues();
-        Alert.alert('ゲーム終了', 'お疲れ様でした。データが保存されました。');
       } catch (error) {
         console.error('Error saving data:', error);
         Alert.alert('エラー', 'データの保存に失敗しました。');
@@ -55,17 +68,6 @@ export default function MainGameScreen() {
 
   useEffect(() => {
     if (trialCount === totalTrials) {
-      // Alert.alert(
-      //   'ゲーム終了',
-      //   'お疲れ様でした。ゲームが終了しました。',
-      //   [
-      //     {
-      //       text: 'OK',
-      //       onPress: handleGameEnd,
-      //     },
-      //   ],
-      //   { cancelable: false }
-      // );
       handleGameEnd();
     }
   }, [trialCount, totalTrials, handleGameEnd]);

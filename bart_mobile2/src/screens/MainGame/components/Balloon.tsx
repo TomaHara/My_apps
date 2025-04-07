@@ -21,10 +21,11 @@ const createAnimatedStyle = (balloonSize: Animated.Value) => ({
 export const Balloon = React.memo(() => {
   const { values } = useContext(GameContext);
   const pompCount = values.pompCount;
+  // const pompCount = 128;
   const balloonSize = React.useRef(new Animated.Value(baseSize)).current;
 
   React.useEffect(() => {
-    const targetSize = pompCount * 3 + baseSize;
+    const targetSize = pompCount * 2 + baseSize;
     Animated.timing(balloonSize, {
       toValue: targetSize,
       duration: 200,
