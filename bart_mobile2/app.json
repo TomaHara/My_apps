@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "bart_mobile2",
+    "slug": "bart_mobile2",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "bart-mobile2",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "newArchEnabled": true,
+      "supportsTablet": true,
+      "bundleIdentifier": "com.barttask.bart-mobile2",
+      "runtimeVersion": "1.0.0",
+      "googleServicesFile": "./GoogleService-Info.plist"
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "newArchEnabled": true,
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.barttask.bart_mobile2",
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
+    },
+    "jsEngine": "hermes",
+    "experiments": {
+      "tsconfigPaths": true,
+      "newArchEnabled": true
+    },
+    "plugins": [
+      "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "e8cf8f6b-fae2-4fac-87d0-806366b8fdf4"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e8cf8f6b-fae2-4fac-87d0-806366b8fdf4"
+    }
+  }
+}
