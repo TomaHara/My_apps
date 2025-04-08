@@ -64,20 +64,19 @@ export default function TaskQuestionnairePage() {
       Alert.alert('エラー', 'タスクの負荷を選択してください');
       return;
     }
-    await setTaskStress(selectedStress);
+    // await setTaskStress(selectedStress);
     if (user) {
       try {
         await addDoc(collection(db, 'Shozemi', user.uid, 'TaskData'), {
           results,
-          questionnaire,
+          // questionnaire,
+          // taskStress: selectedStress,
+          questionnaire: {
+            ...questionnaire,
+            taskStress: selectedStress,
+          },
           taskCompleteTimestamp: serverTimestamp(),
         });
-        //   await addDoc(
-        //     collection(db, 'Shozemi', user.uid, 'QuestionnaireData'),
-        //     {
-        //       questionnaire,
-        //     }
-        //   );
         resetResults();
         resetValues();
       } catch (error) {
@@ -88,14 +87,6 @@ export default function TaskQuestionnairePage() {
       }
     }
   };
-  //   const handleSubmit = () => {
-  //     if (selectedStress) {
-  //       setTaskStress(selectedStress);
-  //       router.push('/mainGame'); // 次のページに遷移
-  //     } else {
-  //       Alert.alert('エラー', 'タスクの負荷を選択してください');
-  //     }
-  //   };
 
   const RadioButton = ({ isSelected }: { isSelected: boolean }) => (
     <View
