@@ -83,6 +83,7 @@ export default function TaskQuestionnairePage() {
         console.error('Error saving data:', error);
         Alert.alert('エラー', 'データの保存に失敗しました。');
       } finally {
+        Alert.alert('アプリをタスクキルしてください。');
         router.push('/login');
       }
     }
