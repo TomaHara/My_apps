@@ -59,12 +59,12 @@ export default function TaskQuestionnairePage() {
     return () => backHandler.remove();
   }, []);
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = async () => {
     if (!selectedStress) {
       Alert.alert('エラー', 'タスクの負荷を選択してください');
       return;
     }
-    setTaskStress(selectedStress);
+    await setTaskStress(selectedStress);
     if (user) {
       try {
         await addDoc(collection(db, 'Shozemi', user.uid, 'TaskData'), {
@@ -87,8 +87,7 @@ export default function TaskQuestionnairePage() {
         router.push('/login');
       }
     }
-  }, [user, results, settings, signOut, selectedStress]);
-
+  };
   //   const handleSubmit = () => {
   //     if (selectedStress) {
   //       setTaskStress(selectedStress);
