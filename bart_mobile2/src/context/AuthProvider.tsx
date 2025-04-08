@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -8,6 +8,7 @@ import {
   User,
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import auth from '../firebase/firebase';
 import { db } from '../firebase/firebase';
@@ -38,16 +39,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  //   const auth = getAuth();
 
-  React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-    return unsubscribe;
-  }, [auth]);
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        // Firebase Auth の状態監視
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+          console.log('Auth state changed:', currentUser?.email);
+          if (currentUser) {
+            // ユーザー情報をAsyncStorageに保存
+            await AsyncStorage.setItem(
+              'user',
+              JSON.stringify({
+                email: currentUser.email,
+                uid: currentUser.uid,
+              })
+            );
+            setUser(currentUser);
+          } else {
+            // ユーザー情報を削除
+            await AsyncStorage.removeItem('user');
+            setUser(null);
+          }
+          setIsLoading(false);
+        });
+
+        // 初期化時にAsyncStorageからユーザー情報を読み込む
+        const savedUser = await AsyncStorage.getItem('user');
+        if (savedUser) {
+          const userData = JSON.parse(savedUser);
+          console.log('Loaded user from storage:', userData.email);
+        }
+
+        return () => unsubscribe();
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        setIsLoading(false);
+      }
+    };
+
+    initAuth();
+  }, []);
 
   const signIn = async (email: string, password: string): Promise<Result> => {
     try {

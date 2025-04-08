@@ -163,6 +163,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthProvider';
 import { StatusBar } from 'expo-status-bar';
+import auth from '../../firebase/firebase';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -201,6 +202,7 @@ export default function LoginScreen() {
       Alert.alert('エラー', '予期しないエラーが発生しました' + error);
     }
   };
+  console.log(`Auth email: ${auth.currentUser?.email}`);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ResultsContext } from '../../src/context/ResultsDataProvider';
+import { useAuth } from '../../src/context/AuthProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type SleepQuality =
   | '大幅に良くなっている'
@@ -24,6 +26,7 @@ export default function SleepQuestionnairePage() {
   );
   const router = useRouter();
   const { setSleepQuality } = useContext(ResultsContext);
+  const { signOut } = useAuth();
 
   const options: SleepQuality[] = [
     '大幅に良くなっている',
@@ -103,6 +106,15 @@ export default function SleepQuestionnairePage() {
           }}
         >
           <Text style={styles.submitButtonText}>次へ</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.linkButton}
+          onPress={async () => {
+            await signOut();
+            router.replace('/login');
+          }}
+        >
+          <Text style={styles.linkText}>ログアウト</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -209,5 +221,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 15,
     fontWeight: '600',
+  },
+  linkButton: {
+    marginTop: 20,
+    padding: 10,
+  },
+  linkText: {
+    color: 'red',
+    textAlign: 'center',
+    fontSize: 16,
   },
 });
