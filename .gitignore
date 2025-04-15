@@ -2,3 +2,23 @@
 firebase*.yml
 .firebase
 firebase.json
+
+/node_modules
+
+# Build and dependency directories
+/dist/
+/build/
+
+# Log files
+*.log
+
+# Environment variables
+.env
+.env.*
+
+# macOS specific
+.DS_Store
+
+# Expo specific
+.expo/
+.expo-shared/
