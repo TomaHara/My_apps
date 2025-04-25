@@ -7,9 +7,10 @@ export interface ResultsData {
   earnings: number[]; // 獲得金額
   isBurst: boolean[]; // 破裂したかどうか
   pompCount: number[]; // 膨らませた回数
-  isChallenged: boolean[]; // ダブルチャンスに挑戦したかどうか
+  // isChallenged: boolean[]; // ダブルチャンスに挑戦したかどうか
+  // isSucceeded: (boolean | null)[]; // ダブルチャンスに成功したかどうか
   totalEarnings: number; // 総獲得金額
-  balloonEndTimestamp: Timestamp[]; //各風船終了時のタイムスタンプ
+  // balloonEndTimestamp: Timestamp[]; //各風船終了時のタイムスタンプ
 }
 // 各風船のデータを表すインターフェースを定義
 export interface ResultsDataContext {
@@ -18,11 +19,12 @@ export interface ResultsDataContext {
     earnings: number,
     isBurst: boolean,
     pompCount: number,
-    totalEarnings: number,
-    balloonEndTimestamp: Timestamp
+    totalEarnings: number
+    // balloonEndTimestamp: Timestamp
   ) => void;
   addTotalEarnings: (totalEarnings: number) => void;
-  addIsChallenged: (isChallenged: boolean) => void;
+  // addIsChallenged: (isChallenged: boolean) => void;
+  // addIsSucceeded: (isSucceeded: boolean | null) => void;
 }
 type Props = {
   children: React.ReactNode;
@@ -35,8 +37,9 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
     earnings: [],
     isBurst: [],
     pompCount: [],
-    balloonEndTimestamp: [],
-    isChallenged: [],
+    // balloonEndTimestamp: [],
+    // isChallenged: [],
+    // isSucceeded: [],
     totalEarnings: 0,
   });
 
@@ -44,8 +47,8 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
     earnings: number,
     isBurst: boolean,
     pompCount: number,
-    totalEarnings: number,
-    balloonEndTimestamp: Timestamp
+    totalEarnings: number
+    // balloonEndTimestamp: Timestamp
   ) => {
     setResults((prevResults) => ({
       ...prevResults,
@@ -53,10 +56,10 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
       isBurst: [...prevResults.isBurst, isBurst],
       pompCount: [...prevResults.pompCount, pompCount],
       totalEarnings: totalEarnings,
-      balloonEndTimestamp: [
-        ...prevResults.balloonEndTimestamp,
-        balloonEndTimestamp,
-      ],
+      // balloonEndTimestamp: [
+      //   ...prevResults.balloonEndTimestamp,
+      //   balloonEndTimestamp,
+      // ],
     }));
   };
 
@@ -67,16 +70,29 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
     }));
   };
 
-  const addIsChallenged = (isChallenged: boolean) => {
-    setResults((prevResults) => ({
-      ...prevResults,
-      isChallenged: [...prevResults.isChallenged, isChallenged],
-    }));
-  };
+  // const addIsChallenged = (isChallenged: boolean) => {
+  //   setResults((prevResults) => ({
+  //     ...prevResults,
+  //     isChallenged: [...prevResults.isChallenged, isChallenged],
+  //   }));
+  // };
+
+  // const addIsSucceeded = (isSucceeded: boolean | null) => {
+  //   setResults((prevResults) => ({
+  //     ...prevResults,
+  //     isSucceeded: [...prevResults.isSucceeded, isSucceeded],
+  //   }));
+  // };
 
   return (
     <ResultsContext.Provider
-      value={{ results, addResultsData, addTotalEarnings, addIsChallenged }}
+      value={{
+        results,
+        addResultsData,
+        addTotalEarnings,
+        // addIsChallenged,
+        // addIsSucceeded,
+      }}
     >
       {children}
     </ResultsContext.Provider>

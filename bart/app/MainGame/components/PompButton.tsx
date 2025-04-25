@@ -1,5 +1,5 @@
 'use client';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { SettingData } from '../../GameData/SettingDataProvider';
 import { GameContext } from '../../GameData/GameContextProvider';
 import { ResultsContext } from '../../ResultsData/ResultDataProvider';
@@ -9,10 +9,17 @@ export const PompButton = () => {
   const { gainPerPush, maxBurstPoint, minBurstPoint, TrialBlocks } =
     useContext(SettingData);
   const { values, setValues } = useContext(GameContext);
-  const { results, addResultsData, addTotalEarnings, addIsChallenged } =
-    useContext(ResultsContext);
+  const {
+    results,
+    addResultsData,
+    addTotalEarnings,
+    // addIsChallenged,
+    // addIsSucceeded,
+  } = useContext(ResultsContext);
   const [burstPoints, setBurstPoints] = useState<number[]>([]);
   const [doubleChance, setDoubleChance] = useState<number[]>([]);
+  const [pompButtonDisabled, setPompButtonDisabled] = useState<boolean>(false);
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
   const totalEarnings = results.totalEarnings;
 
   //ランダムな整数を生成する関数
@@ -96,20 +103,26 @@ export const PompButton = () => {
     );
   }, []);
 
-  //ダブルチャンスの配列を生成する関数
-  const generateDoubleChance = (TrialBlocks: number): number[] => {
-    const doubleChance: number[] = [];
-    for (let i = 0; i < TrialBlocks; i++) {
-      doubleChance.push(generateRandomInt(0, 1));
-    }
-    console.log(doubleChance);
-    return doubleChance;
-  };
+  // //ダブルチャンスの配列を生成する関数
+  // const generateDoubleChance = (TrialBlocks: number): number[] => {
+  //   let doubleChance: number[] = [];
+  //   do {
+  //     doubleChance = [];
+  //     for (let i = 0; i < TrialBlocks; i++) {
+  //       doubleChance.push(generateRandomInt(0, 1));
+  //     }
+  //   } while (
+  //     doubleChance.filter((num) => num === 0).length !==
+  //     doubleChance.filter((num) => num === 1).length
+  //   );
+  //   console.log(doubleChance);
+  //   return doubleChance;
+  // };
 
-  //ダブルチャンスの配列を生成
-  useEffect(() => {
-    setDoubleChance(generateDoubleChance(TrialBlocks));
-  }, []);
+  // //ダブルチャンスの配列を生成
+  // useEffect(() => {
+  //   setDoubleChance(generateDoubleChance(TrialBlocks));
+  // }, []);
 
   // //爆発したときにフルスクリーンダイアログを表示する関数
   // const showFullScreenDialog = () => {
@@ -127,70 +140,121 @@ export const PompButton = () => {
   const closeDialog = () => {
     const burstDialog = document.getElementById('burst') as HTMLDialogElement;
     burstDialog.close();
+    setPompButtonDisabled(false);
+    setButtonDisabled(false);
   };
 
-  //空気を入れるボタンを押したときの処理
-  const handlePomp = () => {
+  const handlePomp = (increment: number) => {
     setValues((prevValues) => ({
       ...prevValues,
-      pompCount: prevValues.pompCount + 1,
-      temporarySavings: prevValues.temporarySavings + gainPerPush,
+      pompCount: prevValues.pompCount + increment,
+      temporarySavings: prevValues.temporarySavings + gainPerPush * increment,
     }));
-    console.log(values);
 
-    if (values.pompCount + 1 == burstPoints[values.trialCount - 1]) {
-      openDialog();
-      addResultsData(
-        0,
-        true,
-        values.pompCount + 1,
-        totalEarnings + 0,
-        Timestamp.fromMillis(Date.now())
-      );
-      setValues((prevValues) => ({
-        ...prevValues,
-        trialCount: prevValues.trialCount + 1,
-        pompCount: 0,
-        temporarySavings: gainPerPush,
-      }));
-      // showFullScreenDialog();
-      console.log(results);
-      console.log(burstPoints);
-    }
-  };
-
-  //10の倍数でダブルチャンスのダイアログを表示
-  const dialog = document.getElementById('doubleChance') as HTMLDialogElement;
-  useEffect(() => {
-    if (values.trialCount % 10 == 1 && values.trialCount != 1) {
-      setTimeout(() => {
-        dialog.showModal();
-      }, 200);
-    }
-  }, [values.trialCount]);
-
-  //挑戦をクリックしたときの処理
-  const handleChallenge = () => {
-    if (doubleChance[Math.floor(values.trialCount / 10) - 1] == 1) {
-      addTotalEarnings(totalEarnings * 2);
+    if (increment > 1) {
+      // const delay = increment === 5 ? 500 : 1000; // Delay for +5 and +10
+      // setTimeout(() => {
+      if (values.pompCount + increment >= burstPoints[values.trialCount - 1]) {
+        openDialog();
+        addResultsData(
+          0,
+          true,
+          values.pompCount + increment,
+          totalEarnings + 0
+          // Timestamp.fromMillis(Date.now())
+        );
+        setValues((prevValues) => ({
+          ...prevValues,
+          trialCount: prevValues.trialCount + 1,
+          pompCount: 0,
+          temporarySavings: 0,
+        }));
+      }
+      // }, delay);
     } else {
-      addTotalEarnings(Math.ceil(totalEarnings / 2 / 5) * 5);
+      if (values.pompCount + increment >= burstPoints[values.trialCount - 1]) {
+        openDialog();
+        addResultsData(
+          0,
+          true,
+          values.pompCount + increment,
+          totalEarnings + 0
+          // Timestamp.fromMillis(Date.now())
+        );
+        setValues((prevValues) => ({
+          ...prevValues,
+          trialCount: prevValues.trialCount + 1,
+          pompCount: 0,
+          temporarySavings: gainPerPush,
+        }));
+      }
     }
-    addIsChallenged(true);
-    console.log(doubleChance[Math.floor(values.trialCount / 10) - 1]);
-    console.log(doubleChance);
-    dialog.close();
   };
+
+  const [isSuccess, setIsSuccess] = useState<string | null>(null);
+
+  // //10の倍数でダブルチャンスのダイアログを表示
+  // useEffect(() => {
+  //   const dialog = document.getElementById('doubleChance') as HTMLDialogElement;
+  //   const burstDialog = document.getElementById('burst') as HTMLDialogElement;
+  //   if (values.trialCount % 10 == 1 && values.trialCount != 1) {
+  //     setPompButtonDisabled(true);
+  //     setButtonDisabled(false);
+  //     setIsSuccess(null);
+  //     setTimeout(() => {
+  //       dialog.showModal();
+  //       burstDialog.close();
+  //     }, 200);
+  //   }
+  // }, [values.trialCount]);
+
+  // //挑戦をクリックしたときの処理
+  // const handleChallenge = () => {
+  //   setButtonDisabled(true);
+  //   setPompButtonDisabled(false);
+  //   const doubledialog = document.getElementById(
+  //     'doubleChance'
+  //   ) as HTMLDialogElement;
+  //   if (doubleChance[Math.floor(values.trialCount / 10) - 1] == 1) {
+  //     addTotalEarnings(totalEarnings * 2);
+  //     addIsSucceeded(true);
+  //     setIsSuccess('成功');
+  //   } else {
+  //     addTotalEarnings(Math.ceil(totalEarnings / 2 / 5) * 5);
+  //     addIsSucceeded(false);
+  //     setIsSuccess('失敗');
+  //   }
+  //   addIsChallenged(true);
+  //   console.log(doubleChance[Math.floor(values.trialCount / 10) - 1]);
+  //   console.log(doubleChance);
+  //   setTimeout(() => {
+  //     doubledialog.close();
+  //     setButtonDisabled(false);
+  //   }, 1000);
+  // };
 
   return (
     <div>
-      <button
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-        onClick={() => handlePomp()}
-        // onKeyDown={(e) => handlePomp(e)}
-      >
-        空気を入れる
-      </button>
+      <div className="flex justify-center space-x-4">
+        <button
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+          onClick={() => handlePomp(1)}
+        >
+          Pump +1
+        </button>
+        <button
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+          onClick={() => handlePomp(3)}
+        >
+          Pump +3
+        </button>
+        <button
+          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+          onClick={() => handlePomp(5)}
+        >
+          Pump +5
+        </button>
+      </div>
 
       <dialog id="burst" className="absolute top-0 left-0 w-screen h-screen">
         <div className=" h-full flex justify-center items-center">
@@ -202,19 +266,25 @@ export const PompButton = () => {
                 autoFocus
                 onClick={() => closeDialog()}
               >
-                次の風船
+                Next
               </button>
             </div>
           </div>
         </div>
       </dialog>
-      <dialog id="doubleChance" className="absolute top-0 left-0 w-hull h-hull">
+      {/* <dialog id="doubleChance" className="absolute top-0 left-0 w-hull h-hull">
         <div className="w-screen h-screen flex flex-col gap-8 justify-center items-center">
           <h1 className="text-3xl font-semibold">ダブルチャンス</h1>
-          <p>成功したら総得点は2倍に、失敗したら総得点は1/2になります。</p>
+          <p>
+            「挑戦」を押すと一定確率で総得点は
+            <span className="font-semibold">2倍</span>か
+            <span className="font-semibold">1/2倍</span>になります。
+          </p>
           <p>{`現在の総得点: ${totalEarnings}`}</p>
+          <p className="text-3xl mt-4">{isSuccess}</p>
           <div className="flex gap-8 mt-8">
             <button
+              disabled={buttonDisabled}
               className="py-1 px-2 rounded-lg text-2xl text-white bg-blue-500"
               type="button"
               onClick={() => {
@@ -224,18 +294,23 @@ export const PompButton = () => {
               挑戦
             </button>
             <button
+              disabled={buttonDisabled}
               className="py-1 px-2 rounded-lg text-2xl text-white bg-red-500"
               type="button"
               onClick={() => {
+                const dialog = document.getElementById(
+                  'doubleChance'
+                ) as HTMLDialogElement;
                 dialog.close();
                 addIsChallenged(false);
+                addIsSucceeded(null);
               }}
             >
               辞退
             </button>
           </div>
         </div>
-      </dialog>
+      </dialog> */}
     </div>
   );
 };

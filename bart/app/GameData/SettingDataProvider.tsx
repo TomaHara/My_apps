@@ -1,5 +1,6 @@
 'use client';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext } from 'react';
+import { useCookies } from 'react-cookie';
 
 type Props = {
   children: React.ReactNode;
@@ -12,17 +13,24 @@ interface Setting {
   minBurstPoint: number;
 }
 
-const settingInfo: Setting = {
-  TrialBlocks: 2,
+const defaultSettings: Setting = {
+  TrialBlocks: 100,
   gainPerPush: 5,
   maxBurstPoint: 128,
   minBurstPoint: 1,
 };
 
-export const SettingData = createContext<Setting>(settingInfo);
+export const SettingData = createContext<Setting>(defaultSettings);
 
 export const SettingDataProvider: React.FC<Props> = ({ children }) => {
+  const [cookies] = useCookies(['isDemo']);
+
+  const settings: Setting = {
+    ...defaultSettings,
+    TrialBlocks: cookies.isDemo ? 2 : 2,
+  };
+
   return (
-    <SettingData.Provider value={settingInfo}>{children}</SettingData.Provider>
+    <SettingData.Provider value={settings}>{children}</SettingData.Provider>
   );
 };

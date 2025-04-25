@@ -1,10 +1,11 @@
-"use client";
-import React from "react";
-import { CookiesProvider } from "react-cookie";
-import { Inter } from "next/font/google";
-import "./globals.css";
+'use client';
+import React from 'react';
+import { CookiesProvider } from 'react-cookie';
+import { Inter } from 'next/font/google';
+import './globals.css';
+// import { AuthProvider } from './auth/authDisplay';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,
@@ -14,7 +15,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <CookiesProvider>{children}</CookiesProvider>
+        <CookiesProvider>
+          {/* <AuthProvider>{ */}
+          {children}
+          {/* }</AuthProvider> */}
+        </CookiesProvider>
       </body>
     </html>
   );

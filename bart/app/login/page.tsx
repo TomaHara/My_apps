@@ -1,19 +1,19 @@
 //ログインページ
-"use client";
+'use client';
 
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import React, { useContext } from "react";
-import { useCookies, CookiesProvider } from "react-cookie";
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCookies } from 'react-cookie';
 
 const LoginForm = () => {
-  const [username, setUserName] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [username, setUserName] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [authInfo, setCookie, removeCookie] = useCookies([
-    "isAuth",
-    "username",
+    'isAuth',
+    'username',
+    'isDemo',
   ]);
   const router = useRouter();
 
@@ -25,37 +25,38 @@ const LoginForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (username) {
-      const docRef = doc(db, "Users", username);
+      const docRef = doc(db, 'Users', username);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        console.log("User exists");
-        setCookie("isAuth", true);
-        setCookie("username", username);
-        setErrorMessage("");
-        console.log(authInfo);
-        router.push("/instruction");
+        console.log('User exists');
+        setCookie('isAuth', true);
+        setCookie('username', username);
+        setCookie('isDemo', false);
+        setErrorMessage('');
+        router.push('/instruction');
       } else {
-        console.log("No such user!");
-        setErrorMessage("登録されていません");
-        setCookie("isAuth", false);
-        removeCookie("username");
+        console.log('No such user!');
+        setErrorMessage('登録されていません');
+        setCookie('isAuth', false);
+        removeCookie('username');
         console.log(authInfo.isAuth);
       }
     } else {
-      setErrorMessage("参加者IDを入力してください");
-      setCookie("isAuth", false);
-      removeCookie("username");
+      setErrorMessage('参加者IDを入力してください');
+      setCookie('isAuth', false);
+      removeCookie('username');
       console.log(authInfo.isAuth);
     }
   };
 
   const handleClick = () => {
-    setCookie("isAuth", false);
-    router.push("/instruction");
+    setCookie('isAuth', false);
+    setCookie('isDemo', true);
+    router.push('/instruction');
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className=" bg-gray-100 flex flex-col items-center justify-center min-h-screen">
       <header className="text-2xl font-bold mb-4 text-black">
         サインイン画面
       </header>

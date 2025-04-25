@@ -1,11 +1,21 @@
 'use client';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GameContext } from '../../GameData/GameContextProvider';
 
 export const Balloon = () => {
   const pompCount = useContext(GameContext).values.pompCount;
-  const balloonSize = pompCount * 4 + 30; // Adjust the multiplier as needed
-  // const balloonSize = 128 * 5 + 50;
+  const [balloonSize, setBalloonSize] = useState(pompCount * 3 + 20);
+
+  useEffect(() => {
+    const targetSize = pompCount * 3 + 30; // Adjusted size calculation
+    const animationDuration = pompCount > 1 ? 0 : 0;
+
+    // const animation = setTimeout(() => {
+    setBalloonSize(targetSize);
+    // }, animationDuration);
+
+    // return () => clearTimeout(animation);
+  }, [pompCount]);
 
   return (
     <div className="flex justify-center items-center">
@@ -13,7 +23,7 @@ export const Balloon = () => {
         src="/Balloon.png"
         width={balloonSize}
         height={balloonSize}
-        style={{ objectFit: 'contain' }}
+        style={{ objectFit: 'contain', transition: 'width 0.5s, height 0.5s' }}
         alt="Balloon"
       />
     </div>

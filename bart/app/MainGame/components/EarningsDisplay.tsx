@@ -11,7 +11,7 @@ export const EarningsDisplay = () => {
   let previousbaloon: number | string;
   if (trialCount === 0) {
     // totalEarnings = 0;
-    previousbaloon = 'なし';
+    previousbaloon = '';
   } else {
     // totalEarnings = earnings.reduce((a, b) => a + b, 0);
     previousbaloon = earnings[trialCount - 1];
@@ -23,12 +23,12 @@ export const EarningsDisplay = () => {
     <div className="text-center">
       <div className="mb-2">
         <p className="text-lg font-bold text-black">
-          合計金額: {totalEarnings}
+          Total Eearned: {totalEarnings}
         </p>
       </div>
       <div>
         <p className="text-lg font-bold text-black">
-          前回の風船: {previousbaloon}
+          Last Balloon: {previousbaloon}
         </p>
       </div>
     </div>
