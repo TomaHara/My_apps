@@ -1,7 +1,7 @@
 module.exports = {
   expo: {
-    name: 'bart-mobile',
-    slug: 'bart-mobile',
+    name: 'bart',
+    slug: 'bart',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
@@ -33,7 +33,7 @@ module.exports = {
         process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
       firebaseAppId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
       eas: {
-        projectId: 'c5850b7a-c481-4c53-b076-168c4eeb8465',
+        projectId: '3d75b928-363c-4aea-8eae-10be5cc96765',
       },
     },
     plugins: [
@@ -42,7 +42,7 @@ module.exports = {
       '@react-native-firebase/auth',
     ],
     updates: {
-      url: 'https://u.expo.dev/c5850b7a-c481-4c53-b076-168c4eeb8465',
+      url: 'https://u.expo.dev/3d75b928-363c-4aea-8eae-10be5cc96765',
     },
     runtimeVersion: '1.0.0',
   },

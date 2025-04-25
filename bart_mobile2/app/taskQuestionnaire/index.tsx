@@ -12,41 +12,33 @@ import { useRouter } from 'expo-router';
 import { ResultsContext } from '../../src/context/ResultsDataProvider';
 import { db } from '../../src/firebase/firebase';
 import { useAuth } from '../../src/context/AuthProvider';
+import { useLanguage } from '../../src/context/LanguageProvider';
+import { translations } from '../../src/assets/translations';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { SettingData } from '../../src/context/SettingDataProvider';
 import { GameContext } from '../../src/context/GameContextProvider';
 
-type TaskStress =
-  | '大幅に軽く感じた'
-  | 'やや軽く感じた'
-  | '変わらない'
-  | 'やや重く感じた'
-  | '大幅に重く感じた';
-
 export default function TaskQuestionnairePage() {
-  const [selectedStress, setSelectedStress] = useState<TaskStress | null>(null);
+  const [selectedStress, setSelectedStress] = useState<string | null>(null);
   const router = useRouter();
   const settings = useContext(SettingData);
   const { results, resetResults, setTaskStress, questionnaire } =
     useContext(ResultsContext);
   const { resetValues } = useContext(GameContext);
   const { user, signOut } = useAuth();
+  const { language } = useLanguage();
 
-  const options: TaskStress[] = [
-    '大幅に軽く感じた',
-    'やや軽く感じた',
-    '変わらない',
-    'やや重く感じた',
-    '大幅に重く感じた',
-  ];
+  // 言語に応じたテキストを取得
+  const t = translations.taskQuestionnaire[language];
+  const options = t.options;
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        Alert.alert('タスクを完了するまで戻れません。', '', [
+        Alert.alert(t.backButtonAlert, '', [
           {
-            text: 'OK',
+            text: t.ok,
             onPress: () => null,
             style: 'cancel',
           },
@@ -57,20 +49,18 @@ export default function TaskQuestionnairePage() {
 
     // コンポーネントがアンマウントされるときリスナーを解除
     return () => backHandler.remove();
-  }, []);
+  }, [t]);
 
   const handleSubmit = async () => {
     if (!selectedStress) {
-      Alert.alert('エラー', 'タスクの負荷を選択してください');
+      Alert.alert(t.error, t.errorMessage);
       return;
     }
-    // await setTaskStress(selectedStress);
+
     if (user) {
       try {
         await addDoc(collection(db, 'Shozemi', user.uid, 'TaskData'), {
           results,
-          // questionnaire,
-          // taskStress: selectedStress,
           questionnaire: {
             ...questionnaire,
             taskStress: selectedStress,
@@ -81,9 +71,9 @@ export default function TaskQuestionnairePage() {
         resetValues();
       } catch (error) {
         console.error('Error saving data:', error);
-        Alert.alert('エラー', 'データの保存に失敗しました。');
+        Alert.alert(t.error, t.saveError);
       } finally {
-        Alert.alert('アプリをタスクキルしてください。');
+        Alert.alert(t.taskKillAlert);
         router.push('/login');
       }
     }
@@ -98,9 +88,7 @@ export default function TaskQuestionnairePage() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.question}>
-          昨日と比べて、今日のタスクの負荷はどうでしたか？
-        </Text>
+        <Text style={styles.question}>{t.question}</Text>
 
         <View style={styles.optionsContainer}>
           {options.map((option) => (
@@ -133,7 +121,7 @@ export default function TaskQuestionnairePage() {
             handleSubmit();
           }}
         >
-          <Text style={styles.submitButtonText}>終了</Text>
+          <Text style={styles.submitButtonText}>{t.submit}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

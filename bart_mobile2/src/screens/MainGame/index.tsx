@@ -15,6 +15,8 @@ import { ResultsContext } from '../../context/ResultsDataProvider';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import { useAuth } from '../../context/AuthProvider';
+import { useLanguage } from '../../context/LanguageProvider';
+import { translations } from '../../assets/translations';
 import { Balloon } from './components/Balloon';
 import { PompButton } from './components/PompButton';
 import { CollectButton } from './components/CollectButton';
@@ -25,6 +27,11 @@ export default function MainGameScreen() {
   const { results, resetResults } = useContext(ResultsContext);
   const { resetValues } = useContext(GameContext);
   const { user, signOut } = useAuth();
+  const { language } = useLanguage();
+
+  // 言語に応じたテキストを取得
+  const t = translations.mainGame[language];
+
   const trialCount = results.earnings.length;
   const totalTrials = settings.TrialBlocks * 10;
 
@@ -32,9 +39,9 @@ export default function MainGameScreen() {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        Alert.alert('タスクを完了するまで戻れません。', '', [
+        Alert.alert(t.backButtonAlert, '', [
           {
-            text: 'OK',
+            text: t.ok,
             onPress: () => null,
             style: 'cancel',
           },
@@ -45,33 +52,12 @@ export default function MainGameScreen() {
 
     // コンポーネントがアンマウントされるときリスナーを解除
     return () => backHandler.remove();
-  }, []);
-
-  // const handleGameEnd = useCallback(async () => {
-  //   if (user) {
-  //     try {
-  //       await addDoc(collection(db, 'Shozemi', user.uid, 'PlayData'), {
-  //         results,
-  //         settings,
-  //         gameCompleteTimestamp: serverTimestamp(),
-  //       });
-  //       resetResults();
-  //       resetValues();
-  //     } catch (error) {
-  //       console.error('Error saving data:', error);
-  //       Alert.alert('エラー', 'データの保存に失敗しました。');
-  //     } finally {
-  //       router.replace('/login');
-  //     }
-  //   }
-  // }, [user, results, settings, signOut]);
+  }, [t]);
 
   useEffect(() => {
     if (trialCount === totalTrials) {
-      // handleGameEnd();
       router.replace('/taskQuestionnaire');
     }
-    // }, [trialCount, totalTrials, handleGameEnd]);
   }, [trialCount, totalTrials]);
 
   if (!settings || !results) {
@@ -80,6 +66,7 @@ export default function MainGameScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* <EarningsDisplay /> */}
       <View style={styles.header}>
         <Text style={styles.trialCount}>
           {`${trialCount + 1}/${totalTrials}`}

@@ -179,27 +179,27 @@ export default function LoginScreen() {
     //   console.error('Login failed:', err);
     // }
     if (!email || !password) {
-      Alert.alert('メールアドレスとパスワードを入力してください');
+      Alert.alert('Error', 'Please enter both email and password.');
       return;
     }
     try {
       const result = await signIn(email, password);
       if (result.isSuccess) {
-        router.replace('/sleepQuestionnaire');
+        router.replace('/selectLanguage');
       } else if (result.errorCode === 'auth/invalid-email') {
         Alert.alert(
-          'エラー',
-          'メールアドレスまたはパスワードが正しくありません'
+          'Error',
+          'Invalid email address format. Please check your email.'
         );
       } else if (result.errorCode === 'auth/invalid-credential') {
         Alert.alert(
-          'エラー',
-          'メールアドレスまたはパスワードが正しくありません'
+          'Error',
+          'Invalid credentials. Please check your email and password.'
         );
       }
     } catch (error) {
       console.error('Login failed:', error);
-      Alert.alert('エラー', '予期しないエラーが発生しました' + error);
+      Alert.alert('Error', 'Login failed. Please try again.');
     }
   };
   console.log(`Auth email: ${auth.currentUser?.email}`);
@@ -210,14 +210,14 @@ export default function LoginScreen() {
         <StatusBar style="dark" />
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.title}>ログイン</Text>
+            <Text style={styles.title}>Login</Text>
           </View>
           {error && <Text style={styles.errorText}>{error}</Text>}
 
           <View style={styles.form}>
             <TextInput
               style={styles.input}
-              placeholder="メールアドレス"
+              placeholder="Email"
               value={email}
               onChangeText={setEmail}
               autoCapitalize="none"
@@ -226,21 +226,23 @@ export default function LoginScreen() {
 
             <TextInput
               style={styles.input}
-              placeholder="パスワード"
+              placeholder="Password"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
             />
 
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
-              <Text style={styles.buttonText}>ログイン</Text>
+              <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.linkButton}
               onPress={() => router.push('/signup')}
             >
-              <Text style={styles.linkText}>アカウントをお持ちでない方</Text>
+              <Text style={styles.linkText}>
+                Don't have an account? Sign up
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

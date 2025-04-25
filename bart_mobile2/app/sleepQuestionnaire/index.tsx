@@ -11,38 +11,27 @@ import {
 import { useRouter } from 'expo-router';
 import { ResultsContext } from '../../src/context/ResultsDataProvider';
 import { useAuth } from '../../src/context/AuthProvider';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-type SleepQuality =
-  | '大幅に良くなっている'
-  | 'やや良くなっている'
-  | '変わらない'
-  | 'やや悪くなっている'
-  | '大幅に悪くなっている';
+import { useLanguage } from '../../src/context/LanguageProvider';
+import { translations } from '../../src/assets/translations';
 
 export default function SleepQuestionnairePage() {
-  const [selectedQuality, setSelectedQuality] = useState<SleepQuality | null>(
-    null
-  );
+  const [selectedQuality, setSelectedQuality] = useState<string | null>(null);
   const router = useRouter();
   const { setSleepQuality } = useContext(ResultsContext);
   const { signOut } = useAuth();
+  const { language } = useLanguage();
 
-  const options: SleepQuality[] = [
-    '大幅に良くなっている',
-    'やや良くなっている',
-    '変わらない',
-    'やや悪くなっている',
-    '大幅に悪くなっている',
-  ];
+  // 言語に応じたテキストを取得
+  const t = translations.sleepQuestionnaire[language];
+  const options = t.options;
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        Alert.alert('タスクを完了するまで戻れません。', '', [
+        Alert.alert(t.backButtonAlert, '', [
           {
-            text: 'OK',
+            text: t.ok,
             onPress: () => null,
             style: 'cancel',
           },
@@ -53,14 +42,14 @@ export default function SleepQuestionnairePage() {
 
     // コンポーネントがアンマウントされるときリスナーを解除
     return () => backHandler.remove();
-  }, []);
+  }, [t]);
 
   const handleSubmit = () => {
     if (selectedQuality) {
       setSleepQuality(selectedQuality);
       router.push('/mainGame'); // 次のページに遷移
     } else {
-      Alert.alert('エラー', '睡眠の質を選択してください');
+      Alert.alert(t.error, t.errorMessage);
     }
   };
 
@@ -73,9 +62,7 @@ export default function SleepQuestionnairePage() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.question}>
-          昨日と比べて、今日の睡眠の質はどうでしたか？
-        </Text>
+        <Text style={styles.question}>{t.question}</Text>
 
         <View style={styles.optionsContainer}>
           {options.map((option) => (
@@ -105,7 +92,7 @@ export default function SleepQuestionnairePage() {
             handleSubmit();
           }}
         >
-          <Text style={styles.submitButtonText}>次へ</Text>
+          <Text style={styles.submitButtonText}>{t.next}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.linkButton}
@@ -114,7 +101,7 @@ export default function SleepQuestionnairePage() {
             router.replace('/login');
           }}
         >
-          <Text style={styles.linkText}>ログアウト</Text>
+          <Text style={styles.linkText}>{t.logout}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

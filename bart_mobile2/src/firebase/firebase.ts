@@ -11,13 +11,13 @@ import Constants from 'expo-constants';
 
 // 環境変数から Firebase 設定を取得
 const firebaseConfig = {
-  apiKey: Constants.expoConfig?.extra?.firebaseApiKey,
-  authDomain: Constants.expoConfig?.extra?.firebaseAuthDomain,
-  projectId: Constants.expoConfig?.extra?.firebaseProjectId,
-  storageBucket: Constants.expoConfig?.extra?.firebaseStorageBucket,
-  messagingSenderId: Constants.expoConfig?.extra?.firebaseMessagingSenderId,
-  appId: Constants.expoConfig?.extra?.firebaseAppId,
-  measurementId: Constants.expoConfig?.extra?.firebaseMeasurementId,
+  apiKey: 'AIzaSyBhVcQF67rhIVT2JgyhtZJDZ1nQmj-PDBI',
+  authDomain: 'my-apps-99715.firebaseapp.com',
+  projectId: 'my-apps-99715',
+  storageBucket: 'my-apps-99715.appspot.com',
+  messagingSenderId: '1037775522319',
+  appId: '1:1037775522319:web:7ac41c1d3af0b9dd5b717a',
+  measurementId: 'G-35HS7XZ1B5',
 };
 
 // Firebaseの初期化

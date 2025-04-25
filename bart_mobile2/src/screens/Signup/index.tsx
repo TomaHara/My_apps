@@ -21,17 +21,17 @@ export default function SignupScreen() {
 
   const handleSignup = async () => {
     if (!email || !password || !confirmPassword) {
-      Alert.alert('エラー', 'すべてのフィールドを入力してください');
+      Alert.alert('Error', 'All fields are required');
       return;
     } else if (password !== confirmPassword) {
-      Alert.alert('エラー', 'パスワードが一致しません');
+      Alert.alert('Error', 'Passwords do not match');
       return;
     }
 
     try {
       const result = await signUp(email, password);
       if (result.isSuccess) {
-        Alert.alert('成功', 'アカウントが作成されました', [
+        Alert.alert('Success', 'Account created successfully', [
           {
             text: 'OK',
             onPress: () => router.replace('/login'),
@@ -39,29 +39,29 @@ export default function SignupScreen() {
         ]);
       } else {
         if (result.errorCode === 'auth/email-already-in-use') {
-          Alert.alert('エラー', 'このメールアドレスは既に使用されています');
+          Alert.alert('Error', 'This email address is already in use');
         }
         if (result.errorCode === 'auth/invalid-email') {
-          Alert.alert('エラー', '無効なメールアドレスです');
+          Alert.alert('Error', 'Invalid email address format');
         }
         if (result.errorCode === 'auth/weak-password') {
-          Alert.alert('エラー', 'パスワードは6文字以上である必要があります');
+          Alert.alert('Error', 'Password should be at least 6 characters');
         }
       }
     } catch (error) {
       console.error('Sign up failed:', error);
-      Alert.alert('エラー', '予期しないエラーが発生しました' + error);
+      Alert.alert('Error', 'Sign up failed. Please try again.');
     }
   };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <Text style={styles.title}>新規登録</Text>
+        <Text style={styles.title}>Sign Up</Text>
 
         <TextInput
           style={styles.input}
-          placeholder="メールアドレス"
+          placeholder="Email"
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
@@ -70,7 +70,7 @@ export default function SignupScreen() {
 
         <TextInput
           style={styles.input}
-          placeholder="パスワード"
+          placeholder="Password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -78,7 +78,7 @@ export default function SignupScreen() {
 
         <TextInput
           style={styles.input}
-          placeholder="パスワード（確認）"
+          placeholder="Confirm Password"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
@@ -93,7 +93,7 @@ export default function SignupScreen() {
           {isLoading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>登録</Text>
+            <Text style={styles.buttonText}>Sign Up</Text>
           )}
         </TouchableOpacity>
 
@@ -104,7 +104,7 @@ export default function SignupScreen() {
             router.push('/login');
           }}
         >
-          <Text style={styles.linkText}>ログイン画面へ</Text>
+          <Text style={styles.linkText}>Already have an account? Log In</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>

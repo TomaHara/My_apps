@@ -7,6 +7,7 @@ import { AuthProvider } from '../src/context/AuthProvider';
 import { SettingDataProvider } from '../src/context/SettingDataProvider';
 import { GameContextProvider } from '../src/context/GameContextProvider';
 import { ResultsContextProvider } from '../src/context/ResultsDataProvider';
+import { LanguageProvider } from '../src/context/LanguageProvider';
 
 // スプラッシュスクリーンが自動的に非表示になるのを防ぐ
 // SplashScreen.preventAutoHideAsync();
@@ -15,11 +16,13 @@ import { ResultsContextProvider } from '../src/context/ResultsDataProvider';
 const MemoizedProviders = memo(
   ({ children }: { children: React.ReactNode }) => (
     <AuthProvider>
-      <SettingDataProvider>
-        <GameContextProvider>
-          <ResultsContextProvider>{children}</ResultsContextProvider>
-        </GameContextProvider>
-      </SettingDataProvider>
+      <LanguageProvider>
+        <SettingDataProvider>
+          <GameContextProvider>
+            <ResultsContextProvider>{children}</ResultsContextProvider>
+          </GameContextProvider>
+        </SettingDataProvider>
+      </LanguageProvider>
     </AuthProvider>
   )
 );
@@ -56,6 +59,13 @@ export default function RootLayout() {
           />
           <Stack.Screen
             name="signup/index"
+            options={{
+              contentStyle: { backgroundColor: '#fff' },
+            }}
+          />
+          {/* Add the new screen for language selection */}
+          <Stack.Screen
+            name="selectLanguage/index"
             options={{
               contentStyle: { backgroundColor: '#fff' },
             }}

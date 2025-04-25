@@ -19,8 +19,8 @@ export default function Index() {
   }
 
   if (user) {
-    console.log('Redirecting to sleepQuestionnaire');
-    return <Redirect href="/sleepQuestionnaire" />;
+    console.log('Redirecting to selectLanguage');
+    return <Redirect href="/selectLanguage" />;
   }
 
   console.log('Redirecting to login');
