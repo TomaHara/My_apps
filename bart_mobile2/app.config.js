@@ -1,28 +1,17 @@
 module.exports = {
   expo: {
     name: 'bart',
-    slug: 'bart',
+    slug: 'bart-test',
     version: '1.0.0',
-    orientation: 'portrait',
-    icon: './assets/icon.png',
-    userInterfaceStyle: 'light',
+    scheme: 'bart',
+    icon: './assets/images/icon.png',
     owner: 'barttask',
-    splash: {
-      image: './assets/icon.png',
-      resizeMode: 'contain',
-      backgroundColor: '#ffffff',
-    },
     assetBundlePatterns: ['**/*'],
     ios: {
-      supportsTablet: true,
-      bundleIdentifier: 'com.toma.bartmobile2',
+      bundleIdentifier: 'com.barttask.bart',
     },
     android: {
-      adaptiveIcon: {
-        foregroundImage: './assets/adaptive-icon.png',
-        backgroundColor: '#ffffff',
-      },
-      package: 'com.toma.bartmobile2',
+      package: 'com.barttask.bart',
     },
     extra: {
       firebaseApiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -33,16 +22,12 @@ module.exports = {
         process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
       firebaseAppId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
       eas: {
-        projectId: '3d75b928-363c-4aea-8eae-10be5cc96765',
+        projectId: '65fb8633-462a-4899-9ae4-06892a8823fe',
       },
     },
-    plugins: [
-      'expo-router',
-      '@react-native-firebase/app',
-      '@react-native-firebase/auth',
-    ],
+    plugins: ['expo-router'],
     updates: {
-      url: 'https://u.expo.dev/3d75b928-363c-4aea-8eae-10be5cc96765',
+      url: 'https://u.expo.dev/65fb8633-462a-4899-9ae4-06892a8823fe',
     },
     runtimeVersion: '1.0.0',
   },
