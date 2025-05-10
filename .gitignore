@@ -22,3 +22,8 @@ firebase.json
 # Expo specific
 .expo/
 .expo-shared/
+
+# Android 
+/android
+# iOS
+/ios
