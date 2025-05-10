@@ -2,28 +2,30 @@ import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { GameContext } from '../../../context/GameContextProvider';
 import { ResultsContext } from '../../../context/ResultsDataProvider';
+import { useLanguage } from '../../../context/LanguageProvider';
+import { translations } from '../../../assets/translations';
 
 export const EarningsDisplay = () => {
   const { values } = useContext(GameContext);
   const { results } = useContext(ResultsContext);
+  const { language } = useLanguage();
+
+  // 言語に応じたテキストを取得
+  const t = translations.mainGame[language];
+
   const earnings = results.earnings;
   const trialCount = earnings.length;
   const totalEarnings = results.totalEarnings;
   const previousBalloon = trialCount === 0 ? '0' : earnings[trialCount - 1];
-  const temporarySavings = values.temporarySavings;
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.box}>
-        <Text style={styles.label}>現在の貯金:</Text>
-        <Text style={styles.amount}>{temporarySavings}</Text>
-      </View> */}
       <View style={styles.box}>
-        <Text style={styles.label}>総得点:</Text>
+        <Text style={styles.label}>{t.totalEarnings}</Text>
         <Text style={styles.amount}>{totalEarnings}</Text>
       </View>
       <View style={styles.box}>
-        <Text style={styles.label}>前回の得点:</Text>
+        <Text style={styles.label}>{t.previousEarnings}</Text>
         <Text style={styles.amount}>{previousBalloon}</Text>
       </View>
     </View>
@@ -41,6 +43,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     marginVertical: 10,
+    marginHorizontal: 20,
   },
   box: {
     flexDirection: 'row',

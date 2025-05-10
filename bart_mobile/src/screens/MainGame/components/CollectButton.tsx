@@ -1,25 +1,32 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { GameContext } from '../../../context/GameContextProvider';
 import { ResultsContext } from '../../../context/ResultsDataProvider';
-import { Timestamp } from 'firebase/firestore';
+import { useLanguage } from '../../../context/LanguageProvider';
+import { translations } from '../../../assets/translations';
+import * as Haptics from 'expo-haptics';
 
 export const CollectButton = () => {
   const { values, setValues } = useContext(GameContext);
   const { results, addResultsData } = useContext(ResultsContext);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const { language } = useLanguage();
+
+  // 言語に応じたテキストを取得
+  const t = translations.mainGame[language];
 
   const handleCollect = () => {
     if (values.pompCount === 0) {
       return;
     }
 
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
     addResultsData(
       values.temporarySavings,
       false,
       values.pompCount,
-      results.totalEarnings + values.temporarySavings,
-      Timestamp.fromMillis(Date.now())
+      results.totalEarnings + values.temporarySavings
     );
 
     setValues((prevValues) => ({
@@ -40,7 +47,7 @@ export const CollectButton = () => {
         onPress={handleCollect}
         disabled={isButtonDisabled || values.pompCount === 0}
       >
-        <Text style={styles.buttonText}>回収</Text>
+        <Text style={styles.buttonText}>{t.collect}</Text>
       </TouchableOpacity>
     </View>
   );

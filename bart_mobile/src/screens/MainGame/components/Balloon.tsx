@@ -1,42 +1,39 @@
-import React, { useContext, useLayoutEffect, useRef } from 'react';
-import { Animated, StyleSheet, View, Dimensions, Easing } from 'react-native';
+import React, { useContext, useCallback } from 'react';
+import { Animated, StyleSheet, View, Dimensions } from 'react-native';
 import { GameContext } from '../../../context/GameContextProvider';
 
 const windowWidth = Dimensions.get('window').width;
 const baseSize = Math.min(windowWidth * 0.15, 200);
 
-export const Balloon = () => {
+// メモ化されたアニメーション関数
+const createAnimatedStyle = (balloonSize: Animated.Value) => ({
+  transform: [
+    {
+      scale: balloonSize.interpolate({
+        inputRange: [baseSize, baseSize * 5],
+        outputRange: [1, 5],
+        extrapolate: 'clamp',
+      }),
+    },
+  ],
+});
+
+export const Balloon = React.memo(() => {
   const { values } = useContext(GameContext);
   const pompCount = values.pompCount;
-  const balloonSize = useRef(new Animated.Value(baseSize)).current;
-  const prevSize = useRef(baseSize);
+  // const pompCount = 128;
+  const balloonSize = React.useRef(new Animated.Value(baseSize)).current;
 
-  useLayoutEffect(() => {
-    const targetSize = pompCount * 3 + baseSize;
-
-    // 現在のアニメーション値を取得
-    balloonSize.stopAnimation(() => {
-      Animated.timing(balloonSize, {
-        toValue: targetSize,
-        duration: 300,
-        useNativeDriver: true,
-        easing: Easing.out(Easing.cubic),
-      }).start();
-    });
-
-    prevSize.current = targetSize;
+  React.useEffect(() => {
+    const targetSize = pompCount * 2 + baseSize;
+    Animated.timing(balloonSize, {
+      toValue: targetSize,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
   }, [pompCount]);
 
-  const animatedStyle = {
-    transform: [
-      {
-        scale: balloonSize.interpolate({
-          inputRange: [baseSize, baseSize * 5],
-          outputRange: [1, 5],
-        }),
-      },
-    ],
-  };
+  const animatedStyle = createAnimatedStyle(balloonSize);
 
   return (
     <View style={styles.container}>
@@ -47,7 +44,7 @@ export const Balloon = () => {
       />
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -56,8 +53,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    // width: baseSize,
-    // height: baseSize,
     width: baseSize,
     height: baseSize,
   },

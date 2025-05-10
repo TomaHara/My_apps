@@ -4,6 +4,7 @@ import { SettingData } from '../../../context/SettingDataProvider';
 import { GameContext } from '../../../context/GameContextProvider';
 import { ResultsContext } from '../../../context/ResultsDataProvider';
 import { Timestamp } from 'firebase/firestore';
+import * as Haptics from 'expo-haptics';
 import { BurstModal } from './BurstModal';
 
 export const PompButton = () => {
@@ -12,8 +13,8 @@ export const PompButton = () => {
   const { values, setValues } = useContext(GameContext);
   const { results, addResultsData } = useContext(ResultsContext);
   const [burstPoints, setBurstPoints] = useState<number[]>([]);
-  const [burstModalVisible, setBurstModalVisible] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [burstModalVisible, setBurstModalVisible] = useState(false);
 
   const generateRandomInt = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -78,6 +79,7 @@ export const PompButton = () => {
   const handlePomp = (increment: number) => {
     if (buttonDisabled) return;
 
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setValues((prevValues) => ({
       ...prevValues,
       pompCount: prevValues.pompCount + increment,
@@ -85,14 +87,15 @@ export const PompButton = () => {
     }));
 
     if (values.pompCount + increment >= burstPoints[values.trialCount - 1]) {
-      setBurstModalVisible(true);
       setButtonDisabled(true);
+      setBurstModalVisible(true);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+
       addResultsData(
         0,
         true,
         values.pompCount + increment,
-        results.totalEarnings,
-        Timestamp.fromMillis(Date.now())
+        results.totalEarnings
       );
       setValues((prevValues) => ({
         ...prevValues,
@@ -127,10 +130,10 @@ export const PompButton = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.buttonRed]}
-          onPress={() => handlePomp(10)}
+          onPress={() => handlePomp(5)}
           disabled={buttonDisabled}
         >
-          <Text style={styles.buttonText}>+10</Text>
+          <Text style={styles.buttonText}>+5</Text>
         </TouchableOpacity>
       </View>
 

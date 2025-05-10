@@ -9,17 +9,23 @@ export interface ResultsData {
   balloonEndTimestamp: Timestamp[];
 }
 
+export interface Questionnaire {
+  sleepQuality: string;
+  taskStress: string;
+}
+
 export interface ResultsDataContext {
   results: ResultsData;
+  questionnaire: Questionnaire;
   addResultsData: (
     earnings: number,
     isBurst: boolean,
     pompCount: number,
-    totalEarnings: number,
-    balloonEndTimestamp: Timestamp
+    totalEarnings: number
   ) => void;
-  addTotalEarnings: (totalEarnings: number) => void;
-  resetResults: () => void; // 追加
+  resetResults: () => void;
+  setSleepQuality: (sleepQuality: string) => void;
+  setTaskStress: (taskStress: string) => void;
 }
 
 type Props = {
@@ -38,30 +44,22 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
   };
 
   const [results, setResults] = useState<ResultsData>(initialResults);
+  const [questionnaire, setQuestionnaire] = useState<Questionnaire>({
+    sleepQuality: '',
+    taskStress: '',
+  });
 
   const addResultsData = (
     earnings: number,
     isBurst: boolean,
     pompCount: number,
-    totalEarnings: number,
-    balloonEndTimestamp: Timestamp
+    totalEarnings: number
   ) => {
     setResults((prevResults) => ({
       ...prevResults,
       earnings: [...prevResults.earnings, earnings],
       isBurst: [...prevResults.isBurst, isBurst],
       pompCount: [...prevResults.pompCount, pompCount],
-      totalEarnings: totalEarnings,
-      balloonEndTimestamp: [
-        ...prevResults.balloonEndTimestamp,
-        balloonEndTimestamp,
-      ],
-    }));
-  };
-
-  const addTotalEarnings = (totalEarnings: number) => {
-    setResults((prevResults) => ({
-      ...prevResults,
       totalEarnings: totalEarnings,
     }));
   };
@@ -70,13 +68,28 @@ export const ResultsContextProvider: React.FC<Props> = ({ children }) => {
     setResults(initialResults);
   };
 
+  const setSleepQuality = (sleepQuality: string) => {
+    setQuestionnaire((prevQuestionnaire) => ({
+      ...prevQuestionnaire,
+      sleepQuality: sleepQuality,
+    }));
+  };
+  const setTaskStress = (taskStress: string) => {
+    setQuestionnaire((prevQuestionnaire) => ({
+      ...prevQuestionnaire,
+      taskStress: taskStress,
+    }));
+  };
+
   return (
     <ResultsContext.Provider
       value={{
         results,
         addResultsData,
-        addTotalEarnings,
-        resetResults, // 追加
+        resetResults,
+        questionnaire,
+        setSleepQuality,
+        setTaskStress,
       }}
     >
       {children}

@@ -7,6 +7,8 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
+import { useLanguage } from '../../../context/LanguageProvider';
+import { translations } from '../../../assets/translations';
 
 interface BurstModalProps {
   visible: boolean;
@@ -14,6 +16,11 @@ interface BurstModalProps {
 }
 
 export const BurstModal: React.FC<BurstModalProps> = ({ visible, onClose }) => {
+  const { language } = useLanguage();
+
+  // 言語に応じたテキストを取得
+  const t = translations.mainGame[language];
+
   return (
     <Modal
       animationType="fade"
@@ -29,7 +36,7 @@ export const BurstModal: React.FC<BurstModalProps> = ({ visible, onClose }) => {
             resizeMode="contain"
           />
           <TouchableOpacity style={styles.nextButton} onPress={onClose}>
-            <Text style={styles.nextButtonText}>Next</Text>
+            <Text style={styles.nextButtonText}>{t.next}</Text>
           </TouchableOpacity>
         </View>
       </View>

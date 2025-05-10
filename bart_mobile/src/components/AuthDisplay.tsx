@@ -1,71 +1,101 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import { useAuth } from '../context/AuthProvider';
-import { router } from 'expo-router';
 
-export const AuthDisplay = () => {
-  const { username, isAuth, clearAuth } = useAuth();
+export const AuthDisplay: React.FC = () => {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const { user, signIn, signUp, signOut, error, isLoading, clearError } =
+    useAuth();
 
-  const handleLogout = () => {
-    clearAuth();
-    router.push('/login');
+  const handleSignIn = async () => {
+    clearError();
+    await signIn(email, password);
   };
 
-  const handleLogin = () => {
-    router.push('/login');
+  const handleSignUp = async () => {
+    clearError();
+    await signUp(email, password);
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (user) {
+    return (
+      <View style={styles.container}>
+        <Text>Welcome {user.email}</Text>
+        <TouchableOpacity style={styles.button} onPress={signOut}>
+          <Text style={styles.buttonText}>Sign Out</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <View>
-        {isAuth ? (
-          <Text style={styles.playerText}>Player: {username}</Text>
-        ) : (
-          <Text style={styles.playerText}>Demo Player</Text>
-        )}
-      </View>
-      <View>
-        {isAuth ? (
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <Text style={styles.buttonText}>Log Out</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Log In</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      {error && <Text style={styles.error}>{error}</Text>}
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+        <Text style={styles.buttonText}>Sign In</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
   },
-  playerText: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#000',
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    borderRadius: 5,
   },
-  loginButton: {
+  button: {
     backgroundColor: '#007AFF',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-  },
-  logoutButton: {
-    backgroundColor: '#FF3B30',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5,
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
+    textAlign: 'center',
+  },
+  error: {
+    color: 'red',
+    marginBottom: 10,
   },
 });

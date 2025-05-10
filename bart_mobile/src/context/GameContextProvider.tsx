@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 type Props = {
   children: React.ReactNode;
@@ -17,10 +17,14 @@ type InitialState = {
       temporarySavings: number;
     }>
   >;
-  resetGame: () => void;
+  resetValues: () => void;
 };
 
 export const GameContext = createContext({} as InitialState);
+
+export const useGame = () => {
+  return useContext(GameContext);
+};
 
 export const GameContextProvider: React.FC<Props> = ({ children }) => {
   const initialValues = {
@@ -29,13 +33,12 @@ export const GameContextProvider: React.FC<Props> = ({ children }) => {
     temporarySavings: 0,
   };
   const [values, setValues] = useState(initialValues);
-
-  const resetGame = () => {
+  const resetValues = () => {
     setValues(initialValues);
   };
 
   return (
-    <GameContext.Provider value={{ values, setValues, resetGame }}>
+    <GameContext.Provider value={{ values, setValues, resetValues }}>
       {children}
     </GameContext.Provider>
   );
